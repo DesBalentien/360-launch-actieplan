@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>360! Launch Actieplan — Aug t/m Dec 2026 (v2)</title>
+<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700;800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root{ --blauw:#0D3EA2; --oranje:#FB5205; --zwart:#0A0A0A; --grijs:#F4F5F7; --lijn:#E3E6ED; }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Open Sans',sans-serif;color:#1a1a1a;background:#fff;line-height:1.6;}
+  h1,h2,h3,h4{font-family:'League Spartan',sans-serif;line-height:1.15;}
+  .wrap{max-width:1060px;margin:0 auto;padding:0 28px;}
+
+  /* HERO */
+  .hero{background:var(--blauw);color:#fff;padding:70px 0 60px;}
+  .hero .tag{display:inline-block;background:var(--oranje);color:#fff;font-family:'League Spartan';font-weight:700;font-size:13px;letter-spacing:2px;padding:6px 14px;border-radius:4px;margin-bottom:22px;}
+  .hero h1{font-size:52px;font-weight:800;letter-spacing:-1px;}
+  .hero h1 span{color:var(--oranje);}
+  .hero p{margin-top:14px;font-size:18px;opacity:.92;max-width:640px;}
+  .hero .meta{margin-top:26px;font-size:13px;opacity:.7;}
+
+  /* KPI STRIP */
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:-34px auto 0;position:relative;}
+  .kpi{background:#fff;border:1px solid var(--lijn);border-radius:12px;padding:20px 22px;box-shadow:0 8px 24px rgba(13,62,162,.10);}
+  .kpi .n{font-family:'League Spartan';font-weight:800;font-size:30px;color:var(--blauw);}
+  .kpi .l{font-size:12.5px;color:#555;margin-top:2px;}
+
+  section{padding:52px 0 8px;}
+  .sec-label{font-family:'League Spartan';font-weight:700;font-size:13px;letter-spacing:2.5px;color:var(--oranje);text-transform:uppercase;}
+  section h2{font-size:34px;font-weight:800;color:var(--blauw);margin:6px 0 20px;}
+  .intro{max-width:760px;color:#444;margin-bottom:24px;}
+
+  /* TIJDLIJN */
+  .tl{border-left:3px solid var(--blauw);margin-left:8px;padding-left:26px;}
+  .tl-item{position:relative;padding-bottom:26px;}
+  .tl-item:before{content:'';position:absolute;left:-35px;top:5px;width:14px;height:14px;border-radius:50%;background:var(--oranje);border:3px solid #fff;box-shadow:0 0 0 2px var(--oranje);}
+  .tl-item .d{font-family:'League Spartan';font-weight:700;color:var(--oranje);font-size:14px;letter-spacing:1px;}
+  .tl-item h3{font-size:19px;color:var(--blauw);margin:2px 0 4px;}
+  .tl-item p{font-size:14.5px;color:#444;max-width:700px;}
+
+  /* TABELLEN */
+  table{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0 20px;}
+  th{background:var(--blauw);color:#fff;font-family:'League Spartan';font-weight:700;font-size:13px;letter-spacing:1px;text-align:left;padding:11px 14px;}
+  td{padding:10px 14px;border-bottom:1px solid var(--lijn);vertical-align:top;}
+  tr:nth-child(even) td{background:var(--grijs);}
+  .oranje{color:var(--oranje);font-weight:700;}
+  .b{font-weight:700;}
+  .tot td{background:var(--blauw)!important;color:#fff;font-family:'League Spartan';font-weight:700;font-size:15px;}
+
+  /* KAARTEN */
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin:6px 0 24px;}
+  .card{border:1px solid var(--lijn);border-radius:14px;padding:24px;background:#fff;}
+  .card.hl{border-top:5px solid var(--oranje);}
+  .card h3{color:var(--blauw);font-size:20px;margin-bottom:4px;}
+  .card .prijs{font-family:'League Spartan';font-weight:800;font-size:30px;color:var(--oranje);margin:8px 0 4px;}
+  .card .prijs small{font-size:13px;color:#777;font-family:'Open Sans';font-weight:400;}
+  .card ul{list-style:none;margin-top:10px;}
+  .card ul li{font-size:13.5px;padding:5px 0 5px 22px;position:relative;color:#333;}
+  .card ul li:before{content:'✓';position:absolute;left:0;color:var(--oranje);font-weight:700;}
+
+  /* CHECKLIST */
+  .week{background:var(--grijs);border-radius:14px;padding:22px 26px;margin-bottom:16px;}
+  .week h3{color:var(--blauw);font-size:18px;margin-bottom:10px;}
+  .week h3 span{color:var(--oranje);}
+  .chk{display:flex;align-items:flex-start;gap:10px;padding:6px 0;font-size:14.5px;cursor:pointer;}
+  .chk input{margin-top:4px;accent-color:var(--oranje);width:16px;height:16px;flex-shrink:0;}
+  .chk input:checked + span{text-decoration:line-through;color:#999;}
+
+  /* NOTES */
+  .note{background:#FFF3ED;border-left:4px solid var(--oranje);border-radius:0 10px 10px 0;padding:16px 20px;font-size:14px;margin:14px 0;}
+  .note .t{font-family:'League Spartan';font-weight:700;color:var(--oranje);font-size:13px;letter-spacing:1px;}
+  .vraag{background:var(--grijs);border-radius:12px;padding:18px 22px;margin-bottom:12px;}
+  .vraag h4{color:var(--blauw);font-size:15.5px;margin-bottom:4px;}
+  .vraag p{font-size:13.5px;color:#444;}
+
+  /* FLOW BLOKKEN */
+  .flow{border:1px solid var(--lijn);border-left:5px solid var(--blauw);border-radius:0 12px 12px 0;padding:20px 24px;margin-bottom:16px;background:#fff;}
+  .flow h3{color:var(--blauw);font-size:18px;}
+  .flow .trigger{display:inline-block;background:var(--blauw);color:#fff;font-size:11.5px;font-family:'League Spartan';font-weight:700;letter-spacing:1px;padding:4px 10px;border-radius:4px;margin:6px 0 10px;}
+  .flow ol{margin:6px 0 4px 20px;font-size:13.5px;color:#333;}
+  .flow ol li{padding:3px 0;}
+  .flow .doel{font-size:13px;color:#777;margin-top:8px;}
+  .flow .doel b{color:var(--oranje);}
+
+  .stap{display:flex;gap:14px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--lijn);}
+  .stap .nr{flex-shrink:0;width:34px;height:34px;border-radius:50%;background:var(--oranje);color:#fff;font-family:'League Spartan';font-weight:800;font-size:16px;display:flex;align-items:center;justify-content:center;}
+  .stap h4{color:var(--blauw);font-size:15.5px;}
+  .stap p{font-size:13.5px;color:#444;}
+
+  .chartbox{max-width:460px;margin:10px auto 24px;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:26px;align-items:start;}
+
+  footer{background:var(--zwart);color:#fff;text-align:center;padding:40px 20px;margin-top:60px;}
+  footer .logo{font-family:'League Spartan';font-weight:800;font-size:28px;}
+  footer .logo span{color:var(--oranje);}
+  footer p{font-size:12.5px;opacity:.6;margin-top:6px;}
+
+  /* Tabellen: horizontaal scrollbaar binnen hun eigen kader i.p.v. de hele pagina */
+  .tablescroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:10px 0 20px;}
+  .tablescroll table{margin:0;}
+  /* grid-onderdelen mogen krimpen zodat tabel/grafiek binnen het scherm blijven */
+  .grid2>*{min-width:0;}
+  /* lange codes/links breken netjes af i.p.v. buiten beeld te lopen */
+  code{overflow-wrap:anywhere;word-break:break-word;}
+  .stap>div{min-width:0;}
+
+  @media(max-width:820px){.kpis{grid-template-columns:1fr 1fr;}.grid2{grid-template-columns:1fr;}.hero h1{font-size:36px;}}
+  @media(max-width:640px){
+    html,body{overflow-x:hidden;}
+    .wrap{padding:0 16px;}
+    .hero{padding:48px 0 44px;}
+    .hero h1{font-size:28px;}
+    .hero p{font-size:15px;}
+    section{padding:38px 0 8px;}
+    section h2{font-size:26px;}
+    .kpis{grid-template-columns:1fr 1fr;gap:10px;margin:-24px auto 0;}
+    .kpi{padding:14px 16px;}
+    .kpi .n{font-size:24px;}
+    th,td{padding:8px 10px;}
+    .week{padding:16px 18px;}
+    .card{padding:18px;}
+    /* brede tabellen scrollen binnen hun kader */
+    .tablescroll table{min-width:520px;}
+  }
+  @media print{.hero{-webkit-print-color-adjust:exact;}.tablescroll{overflow:visible;}}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="tag">COMEBACK &amp; LAUNCH PLAN — V2</div>
+    <h1>360!<span> Actieplan</span><br>Augustus — December 2026</h1>
+    <p>Van doop in de oceaan op Curaçao tot een draaiende content-machine en €102K aan omzettargets. Het volledige plan: contentritme, aanbod, meetplan, email flows en de augustus-analyse. <b>Gebouwd op bijbelse normen, waarden en principes — en dat mag iedereen weten.</b></p>
+    <div class="meta">Versie 2.1 · 5 juli 2026 · Des Balentien · Reinvent Yourself (Romeinen 12:2) · 360! is een christelijke organisatie</div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="kpis">
+    <div class="kpi"><div class="n">3 aug</div><div class="l">Live — dagelijkse content start</div></div>
+    <div class="kpi"><div class="n">48</div><div class="l">Content-plaatsingen per week</div></div>
+    <div class="kpi"><div class="n">4</div><div class="l">Challenge-rondes (aug–dec)</div></div>
+    <div class="kpi"><div class="n">€102.088</div><div class="l">Omzettarget sept–dec (incl. btw)</div></div>
+  </div>
+</div>
+
+<!-- ===================== 1. TIJDLIJN ===================== -->
+<section>
+  <div class="wrap">
+    <div class="sec-label">01 — Tijdlijn</div>
+    <h2>De Route naar Live</h2>
+    <div class="tl">
+      <div class="tl-item">
+        <div class="d">NU — JULI 2026 (4 WEKEN)</div>
+        <h3>Voorbereidingsfase</h3>
+        <p>Alles bouwklaar: Huddle-trainingen live, funnels + email flows, meetsysteem, Discord-structuur, Akoesha onboarden, content batchen. Zie de actielijst in sectie 07.</p>
+      </div>
+      <div class="tl-item">
+        <div class="d">ZONDAG 2 AUGUSTUS</div>
+        <h3>De Doop — publiek getuigenis én geboorte van de nieuwe identiteit</h3>
+        <p>Korte video + foto: gedoopt in de oceaan op Curaçao, door je moeder. Geen contentmoment maar een getuigenis — en het moment waarop de wereld ziet wat 360! vanaf nu is: <b>een christelijke organisatie, gebouwd op bijbelse normen, waarden en principes en de boodschap van Jezus Christus</b>. Reinvent Yourself (Rom. 12:2), letterlijk voorgedaan. Geen verkoop in deze post; puur het verhaal.</p>
+      </div>
+      <div class="tl-item">
+        <div class="d">MAANDAG 3 AUGUSTUS</div>
+        <h3>Content-machine aan + analysemaand start</h3>
+        <p>Dagelijks ritme start. Augustus is tegelijk de <b>testmaand</b>: elke post wordt gelogd en geanalyseerd op hook, angle en performance (sectie 10), zodat september draait op bewezen winnaars.</p>
+      </div>
+      <div class="tl-item">
+        <div class="d">MAANDAG 31 AUGUSTUS</div>
+        <h3>Eerste 360! Challenge</h3>
+        <p>Ma 31 aug t/m vr 4 sept. Eerste conversiemoment: augustus-content bouwt hiernaartoe. Target: 15 deelnemers.</p>
+      </div>
+      <div class="tl-item">
+        <div class="d">SEPTEMBER — DECEMBER</div>
+        <h3>Verkoopwindow</h3>
+        <p>Maandelijkse Challenge-rondes + doorlopende verkoop van trainingen, 1:1 coaching en tools, gevoed door de email flows (sectie 11).</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 2. CONTENTKALENDER ===================== -->
+<section>
+  <div class="wrap">
+    <div class="sec-label">02 — Contentritme</div>
+    <h2>Wekelijkse Contentkalender</h2>
+    <p class="intro">Socials: Instagram, Facebook, TikTok &amp; LinkedIn. Vaste tijden: <b>ochtend 07:00–08:00</b> · <b>avond 19:00–20:00</b>. Elke post CTA → link in bio → 360! Trainingen &amp; Coaching.</p>
+    <table>
+      <tr><th>Dag</th><th>Ochtend (07:00–08:00)</th><th>Avond (19:00–20:00)</th><th>YouTube</th></tr>
+      <tr><td class="b">Maandag</td><td>Personal Leadership post</td><td>Business &amp; Leadership post</td><td>—</td></tr>
+      <tr><td class="b">Dinsdag</td><td>Personal Leadership post</td><td>Business &amp; Leadership post</td><td class="oranje">Longform — Personal Leadership</td></tr>
+      <tr><td class="b">Woensdag</td><td>Personal Leadership post</td><td>Business &amp; Leadership post</td><td>—</td></tr>
+      <tr><td class="b">Donderdag</td><td>Personal Leadership post</td><td>Business &amp; Leadership post</td><td class="oranje">Longform — Business &amp; Leadership</td></tr>
+      <tr><td class="b">Vrijdag</td><td>Personal Leadership post</td><td>Business &amp; Leadership post</td><td>—</td></tr>
+      <tr><td class="b">Zaterdag</td><td colspan="2">Snippet I.M.P.A.C.T. Service op alle 4 platforms</td><td class="oranje">Zelfde snippet als YouTube Short</td></tr>
+      <tr><td class="b">Zondag</td><td colspan="2">—</td><td class="oranje">I.M.P.A.C.T. Service — reguliere upload (vooraf opgenomen)</td></tr>
+    </table>
+    <table>
+      <tr><th>Rol</th><th>Verantwoordelijk voor</th></tr>
+      <tr><td class="b">Des</td><td>Opnemen (1 vaste batchdag/week), Q&amp;A's, I.M.P.A.C.T. Service, 1:1 &amp; trainingen</td></tr>
+      <tr><td class="b">Akoesha</td><td>Content inplannen op alle platforms + losse stories, extra posts, community-interactie tussendoor</td></tr>
+      <tr><td class="b">Claude (ik)</td><td>Scripts, captions, hooks, repurposing per platform, wekelijkse analyse, email copy, trackers</td></tr>
+    </table>
+    <div class="note">
+      <div class="t">REALITY CHECK — PRODUCTIEVOLUME</div>
+      Dit ritme = <b>10 unieke posts + 1 snippet + 3 YouTube-uploads per week → 48 plaatsingen</b> (incl. YT Short). Vol te houden door: 1 vaste opnamedag per week, repurposing door mij, inplannen door Akoesha. Regel: <b>minimaal 2 weken buffer</b> vóór 3 augustus — dus 20 posts + 6 YouTube-video's klaar vóór 2 augustus. De I.M.P.A.C.T. Service is een reguliere upload, dus ook die is volledig batchbaar.
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 3. AANBOD ===================== -->
+<section>
+  <div class="wrap">
+    <div class="sec-label">03 — Aanbod &amp; Prijzen</div>
+    <h2>De 360! Offer Ladder</h2>
+    <p class="intro">Alle prijzen inclusief btw. Trainingen via Huddle, eigen tempo. Q&amp;A's via Discord (Zoom-link), exclusief voor klanten — behalve de gratis community Q&amp;A. <b>Bij elke training of 1:1: 3 maanden gratis deelname aan de 360! Challenge.</b></p>
+    <div class="cards">
+      <div class="card">
+        <h3>360! Community</h3>
+        <div class="prijs">Gratis</div>
+        <ul>
+          <li>Discord community</li>
+          <li>1x per week gratis Q&amp;A (woensdag): Personal Leadership + Business</li>
+          <li>Instappunt vanuit alle social content</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>360! Challenge</h3>
+        <div class="prijs">€150 <small>eenmalig</small></div>
+        <ul>
+          <li>5 dagen, ma t/m vr</li>
+          <li>Daarna €25/maand voor onderhoud &amp; scherpte</li>
+          <li>Rondes: 31 aug, 5 okt, 2 nov, 30 nov</li>
+          <li>3 maanden gratis bij elke training of 1:1</li>
+        </ul>
+      </div>
+      <div class="card hl">
+        <h3>Personal Leadership Training</h3>
+        <div class="prijs">€495 <small>incl. btw</small></div>
+        <ul>
+          <li>Via Huddle — eigen tempo</li>
+          <li>Wekelijkse Q&amp;A (maandagavond) — alleen klanten</li>
+          <li>3 maanden gratis 360! Challenge</li>
+        </ul>
+      </div>
+      <div class="card hl">
+        <h3>Business &amp; Leadership Training</h3>
+        <div class="prijs">€1.495 <small>incl. btw</small></div>
+        <ul>
+          <li>Via Huddle — eigen tempo</li>
+          <li>Wekelijkse Q&amp;A (donderdag) — alleen klanten</li>
+          <li>3 maanden gratis 360! Challenge</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>1:1 Coaching — Personal Leadership</h3>
+        <div class="prijs">€1.995 <small>incl. btw</small></div>
+        <ul>
+          <li>Training (€495) + €1.500 coaching</li>
+          <li>12 weken · 1x per week online sessie (60–90 min)</li>
+          <li>24/7 WhatsApp-toegang via groep</li>
+          <li>3 maanden gratis 360! Challenge</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>1:1 Coaching — Business &amp; Leadership</h3>
+        <div class="prijs">€3.995 <small>incl. btw</small></div>
+        <ul>
+          <li>Training (€1.495) + €2.500 coaching</li>
+          <li>12 weken · 1x per week online sessie (60–90 min)</li>
+          <li>24/7 WhatsApp-toegang via groep</li>
+          <li>3 maanden gratis 360! Challenge</li>
+        </ul>
+      </div>
+    </div>
+    <div class="note">
+      <div class="t">BESLOTEN 05-07-2026</div>
+      <b>Betaalplan:</b> B&amp;L Training en 1:1 B&amp;L in 3 termijnen mogelijk (voorstel: 3× €525 resp. 3× €1.365 — lichte opslag). <b>Challenge gratis-periode:</b> gaat in bij de eerstvolgende ronde ná aankoop. <b>1:1 capaciteit:</b> maximaal 3 nieuwe starts per maand. <b>Fit Club:</b> geparkeerd tot 2027.
+    </div>
+
+    <h3 style="color:var(--blauw);font-size:22px;margin:10px 0 8px;">360! Tools (via Linktree-funnels)</h3>
+    <table>
+      <tr><th>Tool</th><th>Prijs (incl. btw)</th><th>Functie in de funnel</th></tr>
+      <tr><td>360! Personal Leadership Scan</td><td class="oranje">€50</td><td>Laagdrempelige instap → upsell naar PL Training</td></tr>
+      <tr><td>360! Business &amp; Leadership Scan</td><td class="oranje">€100</td><td>Instap voor ondernemers → upsell naar B&amp;L Training</td></tr>
+      <tr><td>360! Explore your Calling, Vision &amp; Mission Toolkit</td><td class="oranje">€75</td><td>Verdieping → brug naar PL Training &amp; 1:1</td></tr>
+      <tr><td>360! Finance Sheet (privé-financiën)</td><td class="oranje">€50</td><td>Grip op je persoonlijke geldzaken → brug naar PL Training</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ===================== 4. WEEKRITME DES ===================== -->
+<section>
+  <div class="wrap">
+    <div class="sec-label">04 — Delivery</div>
+    <h2>Jouw Vaste Weekritme (Live Momenten)</h2>
+    <table>
+      <tr><th>Dag</th><th>Live moment</th><th>Voor wie</th></tr>
+      <tr><td class="b">Maandagavond</td><td>Q&amp;A Personal Leadership</td><td>Alleen PL-klanten (Discord → Zoom)</td></tr>
+      <tr><td class="b">Woensdag</td><td>Gratis Q&amp;A — Personal Leadership + Business</td><td>Hele 360! Community (Discord, gratis)</td></tr>
+      <tr><td class="b">Donderdag</td><td>Q&amp;A Business &amp; Leadership</td><td>Alleen B&amp;L-klanten (Discord → Zoom)</td></tr>
+      <tr><td class="b">Wekelijks</td><td>1:1 sessies (60–90 min per klant)</td><td>1:1 klanten — max. 10 tegelijk bij volle targets</td></tr>
+      <tr><td class="b">Doorlopend</td><td>WhatsApp-groepen 1:1 klanten (24/7)</td><td>Aparte groep PL 1:1 en B&amp;L 1:1</td></tr>
+      <tr><td class="b">Challenge-weken</td><td>Dagelijkse sessies (ma–vr)</td><td>Challenge-deelnemers + onderhoud-leden + trainingsklanten (3 mnd gratis)</td></tr>
+    </table>
+    <div class="note">
+      <div class="t">CAPACITEIT — 1:1 SESSIES</div>
+      Bij volle 1:1 targets (5 PL + 5 B&amp;L tegelijk) ben je <b>10 sessies × 60–90 min = 10–15 uur per week</b> kwijt aan 1:1, naast Q&amp;A's, content en WhatsApp. Besloten (05-07): <b>max. 3 nieuwe 1:1 starts per maand</b> — communiceer dit ook als schaarste ("beperkte plekken"). Blok vaste 1:1 dagen, bijv. dinsdag + donderdag overdag. De I.M.P.A.C.T. Service is een upload — die kost je op zondag zelf géén live tijd.
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 5. CHALLENGE KALENDER ===================== -->
+<section>
+  <div class="wrap">
+    <div class="sec-label">05 — Challenge</div>
+    <h2>360! Challenge Kalender 2026</h2>
+    <table>
+      <tr><th>Ronde</th><th>Data</th><th>Aanmelddeadline (advies)</th><th>Target</th></tr>
+      <tr><td class="b">Ronde 1</td><td>Ma 31 aug — vr 4 sept</td><td>Vr 28 aug</td><td>15 betalende deelnemers</td></tr>
+      <tr><td class="b">Ronde 2</td><td>Ma 5 okt — vr 9 okt</td><td>Vr 2 okt</td><td>15 betalende deelnemers</td></tr>
+      <tr><td class="b">Ronde 3</td><td>Ma 2 nov — vr 6 nov</td><td>Vr 30 okt</td><td>15 betalende deelnemers</td></tr>
+      <tr><td class="b">Ronde 4</td><td>Ma 30 nov — vr 4 dec</td><td>Vr 27 nov</td><td>15 betalende deelnemers</td></tr>
+    </table>
+    <p class="intro" style="font-size:14px;">Prijsmodel: <b>€150 eenmalig</b> → daarna <b>€25/maand</b> onderhoud &amp; scherpte. Trainings- en 1:1 klanten doen <b>3 maanden gratis</b> mee — dat vult de Challenge-rondes met actieve mensen en maakt elke ronde tegelijk een verkoopvloer voor upsells.</p>
+  </div>
+</section>
+
+<!-- ===================== 6. TARGETS ===================== -->
+<section>
+  <div class="wrap">
+    <div class="sec-label">06 — Targets</div>
+    <h2>Targets &amp; Omzetprojectie (Sept — Dec)</h2>
+    <div class="grid2">
+      <div>
+        <table>
+          <tr><th>Product</th><th>Target</th><th>Prijs</th><th>Omzet</th></tr>
+          <tr><td>360! Challenge</td><td>15/mnd × 4</td><td>€150</td><td class="b">€9.000</td></tr>
+          <tr><td>Personal Leadership Training</td><td>30</td><td>€495</td><td class="b">€14.850</td></tr>
+          <tr><td>Business &amp; Leadership Training</td><td>30</td><td>€1.495</td><td class="b">€44.850</td></tr>
+          <tr><td>1:1 Personal Leadership</td><td>5</td><td>€1.995</td><td class="b">€9.975</td></tr>
+          <tr><td>1:1 Business &amp; Leadership</td><td>5</td><td>€3.995</td><td class="b">€19.975</td></tr>
+          <tr><td>360! Tools (mix)</td><td>50</td><td>~€69 gem.</td><td class="b">€3.438</td></tr>
+          <tr class="tot"><td colspan="3">TOTAAL (incl. btw)</td><td>€102.088</td></tr>
+          <tr><td colspan="3" style="color:#777;">Waarvan ex. btw (÷1,21)</td><td style="color:#777;">± €84.370</td></tr>
+        </table>
+        <p style="font-size:13px;color:#777;">Exclusief €25/mnd onderhoud-abonnementen (bonus bovenop). Dit zijn <b>minimum</b>targets.</p>
+      </div>
+      <div>
+        <div class="chartbox"><canvas id="omzetChart"></canvas></div>
+      </div>
+    </div>
+    <div class="note">
+      <div class="t">WAT DE CIJFERS JE VERTELLEN</div>
+      <b>63,5% van je omzet komt uit Business &amp; Leadership</b> (training + 1:1 = €64.825). Je avondposts (B&amp;L) zijn je belangrijkste verkopers — geef die minstens evenveel kwaliteit als de ochtendposts. Tweede inzicht: 30 B&amp;L trainingen in 4 maanden = <b>±2 per week</b>. De Scans (€50/€100) zijn je kwalificatie-instrument: wie een scan koopt, is een warme lead — de email flows (sectie 11) doen daarna het nurture-werk.
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 7. ACTIELIJST JULI ===================== -->
+<section>
+  <div class="wrap">
+    <div class="sec-label">07 — Actielijst</div>
+    <h2>Wat Moet Er Nog Gebeuren (Juli)</h2>
+    <p class="intro">Vier weken tot de doop-post. Vink af wat klaar is — dit document onthoudt je voortgang.</p>
+
+    <div class="week">
+      <h3>Week 1 <span>· 6 — 12 juli</span> — Fundament</h3>
+      <label class="chk"><input type="checkbox" data-k="w1a"><span>Huddle inrichten: beide trainingen aanmaken (structuur, modules, hoofdstukken)</span></label>
+      <label class="chk"><input type="checkbox" data-k="w1b"><span>Prijzen &amp; betaallinks live: PL €495, B&amp;L €1.495, 1:1 €1.995 / €3.995, Challenge €150 + €25/mnd abonnement</span></label>
+      <label class="chk"><input type="checkbox" data-k="w1c"><span>Discord herstructureren: kanalen voor PL-klanten, B&amp;L-klanten, Community, Challenge</span></label>
+      <label class="chk"><input type="checkbox" data-k="w1d"><span>Q&amp;A agenda vastleggen: vaste tijden ma/wo/do + terugkerende Zoom-links in Discord</span></label>
+      <label class="chk"><input type="checkbox" data-k="w1e"><span>Akoesha onboarden: rol, platforms, toegangen, wekelijks ritme + story-planning afspreken</span></label>
+      <label class="chk"><input type="checkbox" data-k="w1f"><span>WhatsApp-groepen 1:1 aanmaken (PL-groep + B&amp;L-groep) incl. groepsregels</span></label>
+    </div>
+
+    <div class="week">
+      <h3>Week 2 <span>· 13 — 19 juli</span> — Producten, Funnels &amp; Meetsysteem</h3>
+      <label class="chk"><input type="checkbox" data-k="w2a"><span>Alle trainingsvideo's opnemen/uploaden in Huddle (PL + B&amp;L compleet)</span></label>
+      <label class="chk"><input type="checkbox" data-k="w2b"><span>4 Tools productieklaar: PL Scan, B&amp;L Scan, Toolkit, Finance Sheet (privé) — incl. betaal- &amp; leverflow</span></label>
+      <label class="chk"><input type="checkbox" data-k="w2c"><span>Linktree opbouwen: Trainingen &amp; Coaching bovenaan + funnels per tool, alle links met UTM-tags (sectie 09)</span></label>
+      <label class="chk"><input type="checkbox" data-k="w2d"><span>Salespages per training + 1:1 (12 weken, sessies, WhatsApp, 3 mnd Challenge gratis benoemen)</span></label>
+      <label class="chk"><input type="checkbox" data-k="w2e"><span>Email flows bouwen in Systeme.io: alle 5 flows uit sectie 11 (ik schrijf de copy)</span></label>
+      <label class="chk"><input type="checkbox" data-k="w2f"><span>Content-tracker aanmaken in 09_Trackers (ik bouw hem) + hook-taxonomie vastleggen</span></label>
+    </div>
+
+    <div class="week">
+      <h3>Week 3 <span>· 20 — 26 juli</span> — Content Batch 1</h3>
+      <label class="chk"><input type="checkbox" data-k="w3a"><span>20 socialposts opnemen (10 PL + 10 B&amp;L) = 2 weken buffer, verdeeld over de hook-types uit sectie 10</span></label>
+      <label class="chk"><input type="checkbox" data-k="w3b"><span>4 YouTube longforms opnemen (2 PL + 2 B&amp;L)</span></label>
+      <label class="chk"><input type="checkbox" data-k="w3c"><span>Eerste 2 I.M.P.A.C.T. Services opnemen (uploads — dus vooraf te batchen), snippets eruit knippen</span></label>
+      <label class="chk"><input type="checkbox" data-k="w3d"><span>Doop-content plannen: wie filmt op Curaçao, welke shots, caption schrijven</span></label>
+    </div>
+
+    <div class="week">
+      <h3>Week 4 <span>· 27 juli — 2 aug</span> — Generale Repetitie</h3>
+      <label class="chk"><input type="checkbox" data-k="w4a"><span>Akoesha plant alle content van week 1 (3–9 aug) in, incl. stories rond de doop-post</span></label>
+      <label class="chk"><input type="checkbox" data-k="w4b"><span>Testkoop van elk product: betaling → toegang → email flow start? Hele keten checken</span></label>
+      <label class="chk"><input type="checkbox" data-k="w4c"><span>Bio's + Linktree op alle platforms geüpdatet met het christelijke identiteitsstatement ("Persoonlijk Leiderschap &amp; Business op bijbelse principes") — IG, FB, TikTok, LinkedIn, YouTube</span></label>
+      <label class="chk"><input type="checkbox" data-k="w4d"><span>Meetsysteem test: klik op elke UTM-link en check of hij meetbaar binnenkomt</span></label>
+      <label class="chk"><input type="checkbox" data-k="w4e"><span>Zondag 2 aug: doop-video + foto posten 🌊</span></label>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 8. AANSCHERPEN ===================== -->
+<section>
+  <div class="wrap">
+    <div class="sec-label">08 — Aanscherpen</div>
+    <h2>Resterende Beslissingen &amp; Aandachtspunten</h2>
+    <div class="vraag"><h4>1. B&amp;L prijssprong t.o.v. eerdere communicatie</h4><p>B&amp;L stond eerder op €495–€895; nu €1.495 (en 1:1 €3.995). Sterke positionering, maar check dat oude prijzen nergens meer zichtbaar zijn (flyers, Systeme.io, Discord, oude posts) en bereid een antwoord voor op "waarom duurder?" — antwoord: 12 weken begeleiding, WhatsApp-toegang, Challenge inbegrepen.</p></div>
+    <div class="vraag"><h4>2. Akoesha's takenpakket formaliseren</h4><p>Spreek concreet af: hoeveel stories per dag (advies: 2–3), welke platforms, reactietijd op comments/DM's, wekelijks overlegmoment, en toegangen (planningstool, IG, TikTok, etc.). Zet het op papier zodat verwachtingen helder zijn.</p></div>
+    <div class="vraag"><h4>3. WhatsApp-groepen: structuur bewaken</h4><p>"24/7 toegang" moet niet "24/7 Des beschikbaar" worden. Advies: vaste antwoordmomenten communiceren (bijv. binnen 24u op werkdagen), en per cohort of per programma één groep — geen individuele appjes.</p></div>
+    <div class="vraag"><h4>4. Doelgroep-brug bewaken</h4><p>Je pivot is naar (startende) ondernemers. Zorg dat elke ochtend-PL-post een brug slaat naar leiderschap in werk/onderneming, zodat je publiek opbouwt dat óók B&amp;L kan kopen.</p></div>
+    <div class="vraag"><h4>5. Btw &amp; administratie</h4><p>Van €102K omzet is ±€17.700 btw. Reserveer btw apart vanaf verkoop #1 — gebruik je eigen Finance Sheet discipline ook zakelijk (apart zakelijk potje).</p></div>
+    <div class="vraag"><h4>6. Challenge gratis-periode — BESLOTEN, nog technisch inrichten</h4><p>Besloten (05-07): de 3 maanden gaan in bij de <b>eerstvolgende Challenge-ronde na aankoop</b>. Nog regelen: automatische Discord-rol per ronde (of kortingscode-flow in Systeme.io) zodat dit geen handwerk wordt.</p></div>
+  </div>
+</section>
+
+<!-- ===================== 9. MEETPLAN ===================== -->
+<section>
+  <div class="wrap">
+    <div class="sec-label">09 — Meten</div>
+    <h2>Alles Meten Vanaf Dag 1</h2>
+    <p class="intro">Je hoeft geen dure tooling te hebben — je hebt een sluitende keten nodig: <b>post → klik → funnel → verkoop</b>, waarbij elke stap een cijfer oplevert. Zo zet je dat op:</p>
+
+    <div class="stap"><div class="nr">1</div><div><h4>UTM-tags op élke link in je Linktree</h4><p>Elke link krijgt een tag: <code>?utm_source=instagram&amp;utm_medium=bio&amp;utm_campaign=pl_scan</code>. Maak per platform een eigen Linktree-variant of gebruik per platform een andere source-tag. Zo zie je straks in Systeme.io exact: deze verkoop kwam via TikTok → B&amp;L Scan → training.</p></div></div>
+    <div class="stap"><div class="nr">2</div><div><h4>Linktree analytics aanzetten</h4><p>Linktree meet kliks per link. Dit is je eerste conversiepunt: profielbezoek → klik. Wekelijks noteren in de tracker.</p></div></div>
+    <div class="stap"><div class="nr">3</div><div><h4>Systeme.io als meetcentrum</h4><p>Alle funnels, betalingen en email flows lopen door Systeme.io — daar zie je per funnel: bezoekers, conversie%, omzet. Combineer met de UTM-tags en je weet welk platform en welke campagne verkoopt.</p></div></div>
+    <div class="stap"><div class="nr">4</div><div><h4>Content-tracker: elke post gelogd</h4><p>Ik bouw een tracker in 09_Trackers waarin elke post staat met: datum, tijd, platform, pijler (PL/B&amp;L), hook-type, angle, en na 48u + 7 dagen de cijfers (views, likes, comments, shares, saves, profielbezoeken). Akoesha of jij vult de cijfers, ik doe de analyse.</p></div></div>
+    <div class="stap"><div class="nr">5</div><div><h4>Platform-analytics wekelijks vastleggen</h4><p>Elke zondag: IG Insights, TikTok Analytics, LinkedIn Analytics, YouTube Studio, Facebook — bereik, volgers, profielbezoeken, klikken naar bio. 15 minuten werk, en na 4 weken heb je trendlijnen.</p></div></div>
+    <div class="stap"><div class="nr">6</div><div><h4>Bron-vraag bij elke aankoop</h4><p>Voeg bij checkout één vraag toe: "Waar ken je 360! van?" Dit vangt alles wat tracking mist (mond-tot-mond, DM's, oude volgers).</p></div></div>
+    <div class="stap"><div class="nr">7</div><div><h4>Maandelijks dashboard</h4><p>Eerste zondag van de maand (vóór elke Challenge-ronde) maak ik een visueel dashboard: wat werkte, wat niet, en wat we volgende maand anders doen.</p></div></div>
+  </div>
+</section>
+
+<!-- ===================== 10. AUGUSTUS ANALYSE ===================== -->
+<section>
+  <div class="wrap">
+    <div class="sec-label">10 — Augustus = Testmaand</div>
+    <h2>Hook- &amp; Angle-Analyse Augustus</h2>
+    <p class="intro">Augustus draait niet alleen om zichtbaarheid — het is een gestructureerd experiment. Eind augustus weten we welke hooks en angles verkopen, zodat september (eerste volle verkoopmaand) draait op bewezen winnaars.</p>
+
+    <h3 style="color:var(--blauw);font-size:20px;margin-bottom:8px;">De hook-taxonomie (elke post krijgt een label)</h3>
+    <table>
+      <tr><th>Hook-type</th><th>Voorbeeld</th></tr>
+      <tr><td class="b">Confronterende statement</td><td>"Niemand volgt je omdat je het zegt." — historisch jouw best presterende type (683 likes)</td></tr>
+      <tr><td class="b">Vraag</td><td>"Wie ben jij als niemand kijkt?"</td></tr>
+      <tr><td class="b">Storytelling / persoonlijk</td><td>"Ik werd gedoopt door mijn moeder. Dit is waarom." </td></tr>
+      <tr><td class="b">Contrarian / mythe doorbreken</td><td>"Discipline is niet het probleem. Richting is het probleem."</td></tr>
+      <tr><td class="b">Lijst / waarde</td><td>"3 signalen dat je business vastloopt op jouw leiderschap"</td></tr>
+      <tr><td class="b">Getuigenis / bewijs</td><td>Resultaat van een klant of je eigen transformatie</td></tr>
+    </table>
+
+    <h3 style="color:var(--blauw);font-size:20px;margin:16px 0 8px;">Het ritme</h3>
+    <div class="stap"><div class="nr">1</div><div><h4>Vooraf (juli): gelabelde batch</h4><p>De 20 posts van batch 1 verdelen we bewust over de hook-types (elk type minimaal 3x, gespreid over PL en B&amp;L), zodat we echt kunnen vergelijken.</p></div></div>
+    <div class="stap"><div class="nr">2</div><div><h4>Elke zondag: wekelijkse analyse</h4><p>Ik analyseer alle posts van die week (via de tracker + jouw analytics-screenshots of Apify-data): welke hook-types en angles scoorden op views, saves, shares én bio-kliks. Bio-kliks wegen het zwaarst — bereik zonder kliks verkoopt niet.</p></div></div>
+    <div class="stap"><div class="nr">3</div><div><h4>Direct bijsturen</h4><p>Winnende types krijgen in de volgende batch meer plek; verliezers vallen af of krijgen een nieuwe angle. Zo wordt elke week scherper.</p></div></div>
+    <div class="stap"><div class="nr">4</div><div><h4>Zondag 30 augustus: het Augustus-Rapport</h4><p>Volledig rapport: top-hooks, top-angles, beste posttijden binnen je sloten, PL vs B&amp;L performance per platform, en het contentrecept voor september — precies vóór Challenge-ronde 1 en het verkoopwindow.</p></div></div>
+
+    <div class="note">
+      <div class="t">WAT IK NU AL VOOR JE KAN KLAARZETTEN</div>
+      Vóór 3 augustus kan ik klaar hebben: de content-tracker met hook-taxonomie, de 20 batch-1 scripts verdeeld over de hook-types, en het analyse-format voor de wekelijkse review. Vanaf week 1 hoef jij alleen cijfers aan te leveren (of we halen ze via Apify) — de analyse en bijsturing doe ik.
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 11. EMAIL NURTURE FLOWS ===================== -->
+<section>
+  <div class="wrap">
+    <div class="sec-label">11 — Nurture</div>
+    <h2>Email Flows: Zo Nurture Je Je Funnels</h2>
+    <p class="intro">Vijf flows in Systeme.io. Principe: elke flow geeft eerst waarde en vertelt jouw verhaal, en maakt daarna pas het aanbod. Toon: jouw stem — kort, direct, persoonlijk. Ik schrijf alle copy volgens de copywriting-leidraad.</p>
+
+    <div class="flow">
+      <h3>Flow 1 — Welkom (nieuwe leads)</h3>
+      <div class="trigger">TRIGGER: EMAIL ACHTERGELATEN (gratis Q&amp;A aanmelding, Challenge-interesse, weggever)</div>
+      <ol>
+        <li><b>Dag 0 — Welkom + jouw verhaal:</b> wie is Des, wat is 360!, wat kunnen ze verwachten. Geen verkoop.</li>
+        <li><b>Dag 2 — Het mechanisme:</b> waarom losse stappen niet werken en 360 graden wél. Herhaling → Gewoonte → Identiteit.</li>
+        <li><b>Dag 4 — Waarde:</b> mini-les Personal Leadership (iets dat ze vandaag kunnen toepassen).</li>
+        <li><b>Dag 7 — Eerste stap:</b> uitnodiging gratis woensdag-Q&amp;A + wijzer naar de Scan die bij hen past (PL €50 / B&amp;L €100).</li>
+      </ol>
+      <div class="doel">Doel: <b>lead → scan-koper of Q&amp;A-bezoeker</b> binnen 7 dagen.</div>
+    </div>
+
+    <div class="flow">
+      <h3>Flow 2 — Tool-kopers (Scan, Toolkit, Finance Sheet)</h3>
+      <div class="trigger">TRIGGER: AANKOOP VAN EEN TOOL</div>
+      <ol>
+        <li><b>Direct — Levering + gebruik:</b> de tool + hoe ze er het maximale uithalen.</li>
+        <li><b>Dag 2 — Verdieping:</b> "Dit zegt jouw scanresultaat over je volgende stap."</li>
+        <li><b>Dag 5 — Getuigenis:</b> verhaal van iemand die van tool naar training ging (I.M.P.A.C.T. materiaal hergebruiken).</li>
+        <li><b>Dag 9 — De brug:</b> wat de tool blootlegt, lost de training op. Concreet: wat zit erin, hoe werkt Huddle, de wekelijkse Q&amp;A.</li>
+        <li><b>Dag 14 — Het aanbod:</b> training + 3 maanden gratis Challenge. Voor B&amp;L Scan-kopers: B&amp;L Training; voor de rest: PL Training.</li>
+      </ol>
+      <div class="doel">Doel: <b>tool-koper → training</b> binnen 14 dagen. Dit is je belangrijkste flow: de Scans zijn je kwalificatie-instrument.</div>
+    </div>
+
+    <div class="flow">
+      <h3>Flow 3 — Challenge-deelnemers</h3>
+      <div class="trigger">TRIGGER: AANMELDING CHALLENGE-RONDE</div>
+      <ol>
+        <li><b>Vóór de week:</b> bevestiging + voorbereiding (schema, Discord-toegang, wat mee te nemen).</li>
+        <li><b>Ma–vr:</b> dagelijkse mail: recap van de sessie + opdracht + reminder voor morgen.</li>
+        <li><b>Zaterdag — Recap:</b> wat ze deze week hebben neergezet + uitnodiging het vast te houden.</li>
+        <li><b>Dinsdag erna — De keuze:</b> twee routes: onderhoud (€25/mnd) of doorpakken met de training (met 3 mnd Challenge gratis — dus onderhoud zit erbij in).</li>
+        <li><b>Vrijdag erna — Laatste reminder</b> met deadline of bonus.</li>
+      </ol>
+      <div class="doel">Doel: <b>deelnemer → onderhoud-lid of trainingsklant</b> binnen 10 dagen na de ronde.</div>
+    </div>
+
+    <div class="flow">
+      <h3>Flow 4 — Trainingsklanten (onboarding + upsell)</h3>
+      <div class="trigger">TRIGGER: AANKOOP PL OF B&amp;L TRAINING</div>
+      <ol>
+        <li><b>Direct — Onboarding:</b> Huddle-toegang, Discord-rol, Q&amp;A agenda, Challenge-gratis-periode activeren.</li>
+        <li><b>Week 2 — Check-in:</b> "Waar sta je? Kom naar de Q&amp;A met je vraag."</li>
+        <li><b>Week 4 — Voortgang:</b> succesverhaal + reminder van de structuur.</li>
+        <li><b>Week 8 — 1:1 upsell:</b> voor wie sneller/dieper wil: 12 weken 1:1 met wekelijkse sessies + WhatsApp-toegang.</li>
+      </ol>
+      <div class="doel">Doel: <b>afmaken van de training</b> (jouw enemy: de 87% die cursussen niet afmaakt) <b>+ 1:1 instroom</b>.</div>
+    </div>
+
+    <div class="flow">
+      <h3>Flow 5 — Verlaten checkout</h3>
+      <div class="trigger">TRIGGER: CHECKOUT GESTART, NIET AFGEROND</div>
+      <ol>
+        <li><b>Na 1 uur:</b> "Je was er bijna — nog vragen?" + link terug.</li>
+        <li><b>Na 24 uur:</b> belangrijkste bezwaar wegnemen (eigen tempo, Q&amp;A support, wat je krijgt).</li>
+        <li><b>Na 72 uur:</b> laatste mail — getuigenis + directe vraag.</li>
+      </ol>
+      <div class="doel">Doel: <b>10–15% van verlaten checkouts alsnog binnenhalen</b> — gratis omzet.</div>
+    </div>
+
+    <div class="note">
+      <div class="t">PRAKTISCH</div>
+      Alle flows bouwen in Systeme.io (week 2 van de actielijst). Ik schrijf alle mail-copy in jouw stem — zeg het en ik lever de complete teksten per flow. Belangrijkste voorwaarde: <b>elke betaal- en aanmeldflow moet een emailadres vangen</b>, anders valt er niets te nurturen. Vast in elke eerste mail én elke salespage: het identiteitsstatement — <b>"360! is een christelijke organisatie. Alles wat wij doen is gebaseerd op bijbelse normen, waarden en principes en de boodschap van Jezus Christus."</b> Geen manifestatie-taal in de flows; wel gebed, roeping en Gods beloften.
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="logo">360<span>!</span></div>
+  <p>Reinvent Yourself (Romeinen 12:2) · Launch Actieplan v2.1 · Augustus — December 2026 · Des Balentien</p>
+  <p>360! is een christelijke organisatie — gebouwd op bijbelse normen, waarden en principes en de boodschap van Jezus Christus.</p>
+</footer>
+
+<script>
+// Tabellen inpakken zodat ze op mobiel horizontaal scrollen i.p.v. de hele pagina
+document.querySelectorAll('table').forEach(t=>{
+  if(t.parentElement && t.parentElement.classList.contains('tablescroll')) return;
+  const w=document.createElement('div');
+  w.className='tablescroll';
+  t.parentNode.insertBefore(w,t);
+  w.appendChild(t);
+});
+// Checklist voortgang bewaren
+document.querySelectorAll('.chk input').forEach(cb=>{
+  const k='360plan_'+cb.dataset.k;
+  try{ if(localStorage.getItem(k)==='1') cb.checked=true; }catch(e){}
+  cb.addEventListener('change',()=>{ try{ localStorage.setItem(k, cb.checked?'1':'0'); }catch(e){} });
+});
+// Omzet chart
+new Chart(document.getElementById('omzetChart'),{
+  type:'doughnut',
+  data:{
+    labels:['B&L Training €44.850','1:1 B&L €19.975','PL Training €14.850','1:1 PL €9.975','Challenge €9.000','Tools €3.438'],
+    datasets:[{
+      data:[44850,19975,14850,9975,9000,3438],
+      backgroundColor:['#0D3EA2','#3A63C4','#FB5205','#FC7A3D','#0A0A0A','#9AA6C4'],
+      borderWidth:2, borderColor:'#fff'
+    }]
+  },
+  options:{
+    plugins:{
+      legend:{position:'bottom',labels:{font:{family:'Open Sans',size:11},boxWidth:12,padding:10}},
+      title:{display:true,text:'Omzetmix Targets Sept–Dec (incl. btw)',font:{family:'League Spartan',size:15,weight:'700'},color:'#0D3EA2'}
+    },
+    cutout:'55%'
+  }
+});
+</script>
+</body>
+</html>
